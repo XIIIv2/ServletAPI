@@ -51,7 +51,7 @@ public class OrderController extends HttpServlet {
             throws SQLException, ServletException, IOException {
         List<Order> orders = service.getAll();
         req.setAttribute("ordersList", orders);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("templates/order-list.jsp");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("webapp/templates/order-list.jsp");
         requestDispatcher.forward(req, resp);
     }
 
