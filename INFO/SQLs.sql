@@ -27,3 +27,14 @@ CREATE TABLE `servlet_api`.`order_product` (
     REFERENCES `servlet_api`.`products` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+INSERT INTO `servlet_api`.`orders` (`order_date`) VALUES ('2025-10-13');
+INSERT INTO `servlet_api`.`orders` (`order_date`) VALUES ('2025-10-13');
+INSERT INTO `servlet_api`.`orders` (`order_date`) VALUES ('2025-10-13');
+
+INSERT INTO `servlet_api`.`products` (`name`,`cost`) VALUES ('Test 1','13.00');
+INSERT INTO `servlet_api`.`products` (`name`,`cost`) VALUES ('Test 2','19.00');
+INSERT INTO `servlet_api`.`products` (`name`,`cost`) VALUES ('Test 3','39.00');
+
+INSERT INTO `servlet_api`.`order_product` (`order_id`,`product_id`) VALUES ('1','1');
+INSERT INTO `servlet_api`.`order_product` (`order_id`,`product_id`) VALUES ('1','3');
