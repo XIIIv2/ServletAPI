@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" isErrorPage="true" %>
-<%@ taglib prefix="hd" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="hd" tagdir="/WEB-INF/tags/" %>
 <!DOCTYPE html>
 <html>
 <head>

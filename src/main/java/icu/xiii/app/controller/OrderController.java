@@ -1,8 +1,11 @@
 package icu.xiii.app.controller;
 
 import icu.xiii.app.entity.Order;
+import icu.xiii.app.entity.Product;
 import icu.xiii.app.service.order.OrderService;
 import icu.xiii.app.service.order.OrderServiceImpl;
+import icu.xiii.app.service.product.ProductService;
+import icu.xiii.app.service.product.ProductServiceImpl;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -11,15 +14,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 public class OrderController extends HttpServlet {
 
-    private OrderService service;
+    private OrderService orderService;
+    private ProductService productService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        service = new OrderServiceImpl();
+        orderService = new OrderServiceImpl();
+        productService = new ProductServiceImpl();
         super.init(config);
     }
 
@@ -49,25 +55,44 @@ public class OrderController extends HttpServlet {
 
     private void read(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException {
-        List<Order> orders = service.getAll();
+        List<Order> orders = orderService.getAll();
         req.setAttribute("ordersList", orders);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("webapp/templates/order-list.jsp");
-        requestDispatcher.forward(req, resp);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("templates/order-list.jsp");
+        dispatcher.forward(req, resp);
     }
 
     private void create(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        Order order = new Order();
+        order.setDate(LocalDate.parse(req.getParameter("date")));
+        for (String productId : req.getParameterValues("orderProducts")) {
+            Product product = productService.getById(Long.parseLong(productId));
+            if (product != null) {
+                order.getProducts().add(product);
+                product.getOrders().add(order);
+            }
+        }
+        orderService.create(order);
+        resp.sendRedirect("list");
     }
 
     private void renderEditForm(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        Long orderId = Long.parseLong(req.getParameter("id"));
+        Order order = orderService.getById(orderId);
+        List<Product> productsList = productService.getAll();
+        req.setAttribute("productsList", productsList);
+        req.setAttribute("order", order);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("templates/order-form.jsp");
+        dispatcher.forward(req, resp);
     }
 
     private void renderNewForm(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        List<Product> productsList = productService.getAll();
+        req.setAttribute("productsList", productsList);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("templates/order-form.jsp");
+        dispatcher.forward(req, resp);
     }
 
     private void delete(HttpServletRequest req, HttpServletResponse resp)

@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS `servlet_api`.`products` (
 CREATE TABLE `servlet_api`.`orders` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `order_date` DATE NOT NULL,
-  `cost` DECIMAL(16,4) NOT NULL,
   PRIMARY KEY (`id`));
 
 CREATE TABLE `servlet_api`.`order_product` (

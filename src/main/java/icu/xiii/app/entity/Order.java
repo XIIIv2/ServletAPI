@@ -21,11 +21,7 @@ public class Order {
     @Column(name = "order_date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "cost", nullable = false)
-    private double cost;
-
-    //@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order", orphanRemoval = true)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "order_product",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
@@ -40,7 +36,6 @@ public class Order {
     public Order(OrderDtoRequest request) {
         this.id = request.id();
         this.date = request.date();
-        this.cost = request.cost();
         request.products().forEach(productId -> {
             Product product = new Product();
             product.setId(productId);
@@ -70,11 +65,10 @@ public class Order {
     }
 
     public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
+        return this.products
+                .stream()
+                .mapToDouble(Product::getCost)
+                .sum();
     }
 
     public Set<Product> getProducts() {
@@ -82,6 +76,9 @@ public class Order {
     }
 
     public void setProducts(Set<Product> products) {
+        /*products.forEach(p -> {
+            p.getOrders().add(this);
+        });*/
         this.products = products;
     }
 
@@ -90,14 +87,13 @@ public class Order {
         if (o == null || getClass() != o.getClass()) return false;
 
         Order order = (Order) o;
-        return Double.compare(cost, order.cost) == 0 && Objects.equals(id, order.id) && date.equals(order.date) && products.equals(order.products);
+        return Objects.equals(id, order.id) && date.equals(order.date) && products.equals(order.products);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hashCode(id);
         result = 31 * result + date.hashCode();
-        result = 31 * result + Double.hashCode(cost);
         result = 31 * result + products.hashCode();
         return result;
     }
@@ -107,7 +103,6 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", date=" + date +
-                ", cost=" + cost +
                 ", products=" + products +
                 '}';
     }

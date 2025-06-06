@@ -22,12 +22,8 @@ public class Product {
     @Column(name = "cost", nullable = false)
     private double cost;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "order_product",
-            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id")
-    )
     @JsonBackReference
+    @ManyToMany(mappedBy = "products", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Order> orders = new HashSet<>();
 
     public Product() {

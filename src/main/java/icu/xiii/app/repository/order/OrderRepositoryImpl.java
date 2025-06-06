@@ -32,7 +32,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             List<Order> orders = session
-                    .createQuery("FROM `Order`", Order.class)
+                    .createQuery("FROM Order", Order.class)
                     .getResultList();
             transaction.commit();
             return  Optional.of(orders);
@@ -93,7 +93,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             TypedQuery<Order> query = session
-                    .createQuery("FROM `Order` ORDER BY id DESC", Order.class);
+                    .createQuery("FROM Order ORDER BY id DESC", Order.class);
             query.setMaxResults(1);
             Order order = query.getSingleResult();
             transaction.commit();

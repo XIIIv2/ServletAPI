@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="hd" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="hd" tagdir="/WEB-INF/tags/" %>
 <html>
 <head>
     <hd:header mytitle="Orders App"/>
@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                    <c:forEach var="book" items="${ordersList}">
+                    <c:forEach var="order" items="${ordersList}">
                         <tr>
                             <td><c:out value="${order.id}" /></td>
                             <td><c:out value="${order.date}" /></td>
